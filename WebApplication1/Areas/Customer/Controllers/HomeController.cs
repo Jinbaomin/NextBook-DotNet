@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Models;
 using WebApplication1.Repository.IRepository;
 
 namespace WebApplication1.Areas.Customer.Controllers
 {
     [Area("Customer")]
-    public class HomeController
+    public class HomeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -15,7 +16,8 @@ namespace WebApplication1.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> productList = _unitOfWork.productRepository.GetAll()
+            IEnumerable<Product> productList = _unitOfWork.productRepository.GetAll();
+            return View(productList);
         }
     }
 }

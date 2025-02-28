@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using WebApplication1.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using WebApplication1.Models;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,18 +61,23 @@ app.UseAuthorization();
 app.UseSession();
 app.MapRazorPages();
 
-app.UseEndpoints(endpoints =>
-{
-    app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area=exists}/{controller=Home}/{action=Index}/{id?}");
-
-    //pattern: "{controller=Home}/{id?}/{action=Index}");
-
-    endpoints.MapControllerRoute(
+app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-});
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}"
+);
+
+//app.UseEndpoints(endpoints =>
+//{
+//    app.MapControllerRoute(
+//    name: "areas",
+//    pattern: "{area=exists}/{controller=Home}/{action=Index}/{id?}");
+
+//    //pattern: "{controller=Home}/{id?}/{action=Index}");
+
+//    endpoints.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+//});
 
 
 app.Run();

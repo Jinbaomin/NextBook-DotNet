@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace WebApplication1.Models
 {
@@ -41,10 +42,13 @@ namespace WebApplication1.Models
         [Range(1, 1000)]
         public double Price100 { get; set; }
 
+
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
+        [ValidateNever]
         public Category Category { get; set; }
 
+        [ValidateNever]
         public string ImageUrl { get; set; }
     }
 }

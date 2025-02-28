@@ -57,14 +57,14 @@
 				</div>
 				<div class="mb-3">
 					<label asp-for="Product.CategoryId" class="mb-1"></label>
-					<select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" type="text" class="form-select border-0 shadow">
+					<select asp-for="@Model.Product.CategoryId" asp-items="@Model.CategoryList" type="text" class="form-select border-0 shadow">
 						<option>--Select Category--</option>
 					</select>
 					<span asp-validation-for="Product.CategoryId" class="text-danger"></span>
 				</div>
 				<div class="mb-3">
 					<label asp-for="Product.ImageUrl" class="mb-1"></label>
-					<input asp-for="Product.ImageUrl" type="file" class="form-control border-0 shadow" />
+					<input asp-for="Product.ImageUrl" type="file" name="file" class="form-control border-0 shadow" />
 					<span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
 				</div>
 				<div class="row">
