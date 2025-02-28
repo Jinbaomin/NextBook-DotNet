@@ -1,0 +1,48 @@
+﻿@model Company
+
+<form method="post">
+	<div class="border p-3 mt-4">
+		<div class="row pb-2">
+			<h2 class="text-primary">Create Category</h2>
+			<hr />
+		</div>
+		<div class="mb-3">
+			<label asp-for="Name" class="mb-1"></label>
+			<input asp-for="Name" type="text" class="form-control" />
+			<span asp-validation-for="Name" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label asp-for="StreetAddress" class="mb-1"></label>
+			<input asp-for="StreetAddress" type="text" class="form-control" />
+			<span asp-validation-for="StreetAddress" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label asp-for="City" class="mb-1"></label>
+			<input asp-for="City" type="text" class="form-control" />
+			<span asp-validation-for="City" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label asp-for="State" class="mb-1"></label>
+			<input asp-for="State" type="text" class="form-control" />
+			<span asp-validation-for="State" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label asp-for="PostalCode" class="mb-1"></label>
+			<input asp-for="PostalCode" type="text" class="form-control" />
+			<span asp-validation-for="PostalCode" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label asp-for="PhoneNumber" class="mb-1"></label>
+			<input asp-for="PhoneNumber" type="text" class="form-control" />
+			<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+		</div>
+		<div class="row">
+			<div class="col-6 col-md-3">
+				<button type="submit" class="btn btn-primary form-control">Create</button>
+			</div>
+			<div class="col-6 col-md-3">
+				<a asp-controller="Company" asp-action="Index" class="btn btn-secondary border">Back to company list</a>
+			</div>
+		</div>
+	</div>
+</form>
