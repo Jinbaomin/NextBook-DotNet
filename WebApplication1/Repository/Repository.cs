@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.Repository.IRepository;
+using System.Linq.Expressions;
 
 namespace WebApplication1.Repository;
 
@@ -25,18 +26,41 @@ public class Repository<T> : IRepository<T> where T : class
         //throw new NotImplementedException();
     }
 
-    public T Get(System.Linq.Expressions.Expression<Func<T, bool>> filter)
+    public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
     {
         IQueryable<T> query = dbSet;
-        query = query.Where(filter);
-        return query.FirstOrDefault();
+        if(filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        if (!string.IsNullOrEmpty(includeProperties))
+        {
+            foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+        }
+            return query.FirstOrDefault();
         //throw new NotImplementedException();
     }
 
-    public IEnumerable<T> GetAll()
+    public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
     {
         IQueryable<T> query = dbSet;
-        return query.ToList();
+        if(filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        if (!string.IsNullOrEmpty(includeProperties))
+        {
+            foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+        }
+            return query.ToList();
         //throw new NotImplementedException();
     }
 
@@ -51,4 +75,5 @@ public class Repository<T> : IRepository<T> where T : class
         dbSet.RemoveRange(entity);
         //throw new NotImplementedException();
     }
+
 }

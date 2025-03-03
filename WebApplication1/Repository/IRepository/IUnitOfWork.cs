@@ -8,6 +8,9 @@ namespace WebApplication1.Repository.IRepository
         IProductRepository productRepository { get; }
         ICompanyRepository companyRepository { get; }
         IShoppingCartRepository shoppingCartRepository { get; }
+        IOrderDetailRepository orderDetailRepository { get; }
+        IOrderHeaderRepository orderHeaderRepository { get; }
+        IApplicationUser applicationUserRepository { get; }
         void Save();
     }
 }

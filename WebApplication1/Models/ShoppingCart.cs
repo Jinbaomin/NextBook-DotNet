@@ -20,5 +20,8 @@ namespace WebApplication1.Models
         [ForeignKey("ApplicationUserId")]
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
+
+        [NotMapped]
+        public double Total;
     }
 }
