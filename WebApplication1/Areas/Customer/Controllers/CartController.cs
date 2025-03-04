@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNetCoreGeneratedDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApplication1.Models;
@@ -102,6 +103,64 @@ namespace WebApplication1.Areas.Customer.Controllers
             }
 
             return View(shoppingCart);
+        }
+
+        [HttpPost]
+        [ActionName("Summary")]
+        public IActionResult SummaryPOST()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            ShoppingCartVM shoppingCart = new()
+            {
+                shoppingCartList = _unitOfWork.shoppingCartRepository.GetAll(o => o.ApplicationUserId == userId, includeProperties: "Product"),
+                OrderHeader = new()
+            };
+
+            shoppingCart.OrderHeader.ApplicationUser = _unitOfWork.applicationUserRepository.Get(o => o.Id == userId);
+            shoppingCart.OrderHeader.ApplicationUserId = userId;
+            shoppingCart.OrderHeader.OrderDate = DateTime.Now;
+
+            shoppingCart.OrderHeader.StreetAddress = shoppingCart.OrderHeader.ApplicationUser.StreetAddress;
+            shoppingCart.OrderHeader.PhoneNunber = shoppingCart.OrderHeader.ApplicationUser.PhoneNumber;
+            shoppingCart.OrderHeader.City = shoppingCart.OrderHeader.ApplicationUser.City;
+            shoppingCart.OrderHeader.State = shoppingCart.OrderHeader.ApplicationUser.State;
+            shoppingCart.OrderHeader.PostalCode = shoppingCart.OrderHeader.ApplicationUser.PostalCode;
+            shoppingCart.OrderHeader.Name = shoppingCart.OrderHeader.ApplicationUser.Name;
+
+            foreach (var item in shoppingCart.shoppingCartList)
+            {
+                item.Total = getPriceBasedOnCount(item);
+                shoppingCart.OrderHeader.OrderTotal += item.Count * item.Total;
+            }
+
+            _unitOfWork.orderHeaderRepository.Add(shoppingCart.OrderHeader);
+            _unitOfWork.Save();
+
+            foreach (var item in shoppingCart.shoppingCartList)
+            {
+                OrderDetail orderDetails = new()
+                {
+                    productId = item.ProductId,
+                    OrderHeaderId = shoppingCart.OrderHeader.Id,
+                    Price = item.Total,
+                    Count = item.Count
+                };
+
+                _unitOfWork.orderDetailRepository.Add(orderDetails);
+                _unitOfWork.Save();
+            }
+
+            return RedirectToAction(nameof(OrderConfirmation), new {userId = shoppingCart.OrderHeader.ApplicationUserId, orderId = shoppingCart.OrderHeader.Id });
+        }
+
+        public IActionResult OrderConfirmation(string userId, int orderId)
+        {
+            List<ShoppingCart> carts = _unitOfWork.shoppingCartRepository.GetAll(o => o.ApplicationUserId == userId).ToList();
+            _unitOfWork.shoppingCartRepository.DeleteRange(carts);
+            _unitOfWork.Save();
+            return View(orderId);
         }
 
         public double getPriceBasedOnCount(ShoppingCart shoppingCart)
