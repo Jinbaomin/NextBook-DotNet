@@ -14,6 +14,8 @@ namespace WebApplication1.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        [BindProperty]
+        public Product product { get; set; }
         public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
@@ -97,16 +99,16 @@ namespace WebApplication1.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            Product productObj = _unitOfWork.productRepository.Get(o => o.ID == id);
+            product = _unitOfWork.productRepository.Get(o => o.ID == id);
 
-            if (productObj == null)
+            if (product == null)
             {
                 return NotFound();
             }
 
             ProductVM productVM = new()
             {
-                Product = productObj,
+                Product = product,
                 CategoryList = _unitOfWork.categoryRepository.GetAll().Select(u => new SelectListItem
                 {
                     Text = u.Name,
@@ -114,12 +116,13 @@ namespace WebApplication1.Areas.Admin.Controllers
                 })
             };
 
+            
             return View(productVM);
         }
 
         // HTTP - POST
         [HttpPost]
-        public IActionResult Edit(Product product, IFormFile? file)
+        public IActionResult Edit(IFormFile? file)
         {
             if (product == null)
             {
@@ -131,11 +134,11 @@ namespace WebApplication1.Areas.Admin.Controllers
                 if (file != null)
                 {
                     // Delete the existing image
-                    string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
-                    if (System.IO.File.Exists(oldImagePath))
-                    {
-                        System.IO.File.Delete(oldImagePath);
-                    }
+                    //string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
+                    //if (System.IO.File.Exists(oldImagePath))
+                    //{
+                    //    System.IO.File.Delete(oldImagePath);
+                    //}
 
                     // Assign a new image path
                     product.ImageUrl = handleUploadFile(file);
@@ -143,6 +146,8 @@ namespace WebApplication1.Areas.Admin.Controllers
 
                 _unitOfWork.productRepository.Update(product);
                 _unitOfWork.Save();
+
+                TempData["success"] = "Update product successfully";
                 return RedirectToAction("Index");
             }
 

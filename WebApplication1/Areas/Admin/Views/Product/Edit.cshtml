@@ -61,6 +61,7 @@
 					<label asp-for="@Model.Product.ImageUrl" class="mb-1"></label>
 					<input asp-for="@Model.Product.ImageUrl" type="file" name="file" class="form-control border-0 shadow" />
 					@* <input asp-for="@Model.Product.ImageUrl" type="text" /> *@
+					<input asp-for="@Model.Product.ImageUrl" hidden />
 					<span asp-validation-for="@Model.Product.ImageUrl" class="text-danger"></span>
 				</div>
 				<div class="row">

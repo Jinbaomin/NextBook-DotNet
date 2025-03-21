@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApplication1.Models;
 using WebApplication1.Repository.IRepository;
+using WebApplication1.Utility;
 using WebApplication1.ViewModels;
 
 namespace WebApplication1.Areas.Customer.Controllers
@@ -62,6 +63,8 @@ namespace WebApplication1.Areas.Customer.Controllers
             else
             {
                 _unitOfWork.shoppingCartRepository.Remove(cart);
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                _unitOfWork.shoppingCartRepository.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).Count() - 1);
                 _unitOfWork.Save();
             }
 
@@ -71,6 +74,8 @@ namespace WebApplication1.Areas.Customer.Controllers
         public IActionResult Remove(int cartId)
         {
             ShoppingCart cart = _unitOfWork.shoppingCartRepository.Get(o => o.Id == cartId);
+            HttpContext.Session.SetInt32(SD.SessionCart, 
+                _unitOfWork.shoppingCartRepository.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).Count() - 1);
             _unitOfWork.shoppingCartRepository.Remove(cart);
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
@@ -88,6 +93,7 @@ namespace WebApplication1.Areas.Customer.Controllers
             };
 
             shoppingCart.OrderHeader.ApplicationUser = _unitOfWork.applicationUserRepository.Get(o => o.Id == userId);
+
 
             shoppingCart.OrderHeader.StreetAddress = shoppingCart.OrderHeader.ApplicationUser.StreetAddress;
             shoppingCart.OrderHeader.PhoneNunber = shoppingCart.OrderHeader.ApplicationUser.PhoneNumber;
@@ -121,6 +127,7 @@ namespace WebApplication1.Areas.Customer.Controllers
             shoppingCart.OrderHeader.ApplicationUser = _unitOfWork.applicationUserRepository.Get(o => o.Id == userId);
             shoppingCart.OrderHeader.ApplicationUserId = userId;
             shoppingCart.OrderHeader.OrderDate = DateTime.Now;
+            shoppingCart.OrderHeader.OrderStatus = SD.StatusPending;
 
             shoppingCart.OrderHeader.StreetAddress = shoppingCart.OrderHeader.ApplicationUser.StreetAddress;
             shoppingCart.OrderHeader.PhoneNunber = shoppingCart.OrderHeader.ApplicationUser.PhoneNumber;
