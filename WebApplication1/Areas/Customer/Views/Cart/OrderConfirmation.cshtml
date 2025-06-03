@@ -1,15 +1,335 @@
-﻿﻿
-@model int
+﻿@model int
 
-<div class="container row pt-4">
-    <div class="col-12 text-center">
-        <h1 class="text-primary text-center">Order Placed Successfully!</h1>
-        Your Order Number is : @Model <br/><br/>
-        <img src="~/images/lawn_leaf.jpg" width="65%" />
-    </div>
-    <div class="col-12 text-center" style="color:green">
-        <br/>
-        Your order has been placed successfully! <br/>
-    </div>
+<div class="container py-5">
+    <div class="order-confirmation-container">
+        <!-- Success Card -->
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <!-- Header with confetti animation -->
+            <div class="card-header bg-success-gradient text-white p-0">
+                <div class="confetti-container">
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                </div>
+                <div class="text-center py-5 position-relative">
+                    <div class="success-checkmark">
+                        <div class="check-icon">
+                            <span class="icon-line line-tip"></span>
+                            <span class="icon-line line-long"></span>
+                            <div class="icon-circle"></div>
+                            <div class="icon-fix"></div>
+                        </div>
+                    </div>
+                    <h1 class="display-5 fw-bold text-white mt-4">Thank You!</h1>
+                    <p class="lead text-white mb-0">Your order has been placed successfully</p>
+                </div>
+            </div>
 
-</div> 
+            <div class="card-body p-4 p-md-5">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <div class="order-info mb-5">
+                            <div class="d-inline-block border border-success border-2 rounded-pill px-4 py-2 mb-4">
+                                <h5 class="mb-0 text-success">Order #<span class="fw-bold">@Model</span></h5>
+                            </div>
+                            <p class="text-muted">We've sent a confirmation email to your registered email address with all the details of your purchase.</p>
+                        </div>
+
+                        <div class="order-details p-4 bg-light rounded-4 mb-5">
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <div class="detail-box">
+                                        <div class="icon-box bg-primary bg-opacity-10 text-primary mb-3">
+                                            <i class="bi bi-box-seam"></i>
+                                        </div>
+                                        <h6 class="fw-bold">Shipping</h6>
+                                        <p class="small mb-0">Your order will be processed within 24 hours</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="detail-box">
+                                        <div class="icon-box bg-success bg-opacity-10 text-success mb-3">
+                                            <i class="bi bi-truck"></i>
+                                        </div>
+                                        <h6 class="fw-bold">Delivery</h6>
+                                        <p class="small mb-0">Estimated delivery: @DateTime.Now.AddDays(7).ToString("MMM dd") - @DateTime.Now.AddDays(14).ToString("MMM dd")</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="detail-box">
+                                        <div class="icon-box bg-info bg-opacity-10 text-info mb-3">
+                                            <i class="bi bi-chat-left-text"></i>
+                                        </div>
+                                        <h6 class="fw-bold">Support</h6>
+                                        <p class="small mb-0">Contact our support team for any questions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="product-image mb-5">
+                            <img src="~/images/lawn_leaf.jpg" class="img-fluid rounded-4 shadow-sm" alt="Product Image" />
+                        </div>
+
+                        <div class="next-steps">
+                            <h5 class="mb-4">What's Next?</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <a href="/Orders/Details/@Model" class="btn btn-outline-primary btn-lg w-100">
+                                        <i class="bi bi-file-earmark-text me-2"></i>View Order Details
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="/Home/Index" class="btn btn-primary btn-lg w-100">
+                                        <i class="bi bi-shop me-2"></i>Continue Shopping
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-light p-4 text-center">
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <h6 class="text-muted mb-3">Need Help?</h6>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="/Contact" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-envelope me-1"></i>Contact Us
+                            </a>
+                            <a href="/FAQ" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-question-circle me-1"></i>FAQs
+                            </a>
+                            <a href="/Orders" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-box me-1"></i>Track Orders
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Gradient background for header */
+    .bg-success-gradient {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+
+    /* Confetti animation */
+    .confetti-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #fff;
+        opacity: 0.7;
+        animation: confetti-fall 5s linear infinite;
+    }
+
+        .confetti:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            background-color: #ffeb3b;
+        }
+
+        .confetti:nth-child(2) {
+            left: 20%;
+            animation-delay: 0.5s;
+            background-color: #ff9800;
+        }
+
+        .confetti:nth-child(3) {
+            left: 30%;
+            animation-delay: 1s;
+            background-color: #f44336;
+        }
+
+        .confetti:nth-child(4) {
+            left: 40%;
+            animation-delay: 1.5s;
+            background-color: #9c27b0;
+        }
+
+        .confetti:nth-child(5) {
+            left: 50%;
+            animation-delay: 2s;
+            background-color: #3f51b5;
+        }
+
+        .confetti:nth-child(6) {
+            left: 60%;
+            animation-delay: 2.5s;
+            background-color: #03a9f4;
+        }
+
+        .confetti:nth-child(7) {
+            left: 70%;
+            animation-delay: 3s;
+            background-color: #4caf50;
+        }
+
+        .confetti:nth-child(8) {
+            left: 80%;
+            animation-delay: 3.5s;
+            background-color: #8bc34a;
+        }
+
+        .confetti:nth-child(9) {
+            left: 90%;
+            animation-delay: 4s;
+            background-color: #cddc39;
+        }
+
+        .confetti:nth-child(10) {
+            left: 95%;
+            animation-delay: 4.5s;
+            background-color: #ffeb3b;
+        }
+
+    
+
+    /* Success checkmark animation */
+    .success-checkmark {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+    }
+
+    .check-icon {
+        width: 80px;
+        height: 80px;
+        position: relative;
+        border-radius: 50%;
+        box-sizing: content-box;
+        border: 4px solid white;
+    }
+
+        .check-icon::before {
+            top: 3px;
+            left: -2px;
+            width: 30px;
+            transform-origin: 100% 50%;
+            border-radius: 100px 0 0 100px;
+        }
+
+        .check-icon::after {
+            top: 0;
+            left: 30px;
+            width: 60px;
+            transform-origin: 0 50%;
+            border-radius: 0 100px 100px 0;
+            animation: rotate-circle 4.25s ease-in;
+        }
+
+        .check-icon::before, .check-icon::after {
+            content: '';
+            height: 100px;
+            position: absolute;
+            background: transparent;
+            transform: rotate(-45deg);
+        }
+
+        .check-icon .icon-line {
+            height: 5px;
+            background-color: #fff;
+            display: block;
+            border-radius: 2px;
+            position: absolute;
+            z-index: 10;
+        }
+
+            .check-icon .icon-line.line-tip {
+                top: 46px;
+                left: 14px;
+                width: 25px;
+                transform: rotate(45deg);
+                animation: icon-line-tip 0.75s;
+            }
+
+            .check-icon .icon-line.line-long {
+                top: 38px;
+                right: 8px;
+                width: 47px;
+                transform: rotate(-45deg);
+                animation: icon-line-long 0.75s;
+            }
+
+        .check-icon .icon-circle {
+            top: -4px;
+            left: -4px;
+            z-index: 10;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: absolute;
+            box-sizing: content-box;
+            border: 4px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .check-icon .icon-fix {
+            top: 8px;
+            width: 5px;
+            left: 26px;
+            z-index: 1;
+            height: 85px;
+            position: absolute;
+            transform: rotate(-45deg);
+            background-color: transparent;
+        }
+
+    
+
+    
+
+    /* Icon boxes */
+    .icon-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+        .icon-box i {
+            font-size: 24px;
+        }
+
+    /* Card and button hover effects */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    
+
+    /* Rounded corners for better aesthetics */
+    .rounded-4 {
+        border-radius: 1rem !important;
+    }
+</style>

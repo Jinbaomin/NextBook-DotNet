@@ -22,18 +22,25 @@ namespace WebApplication1.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> productList = _unitOfWork.productRepository.GetAll(includeProperties: "Category");
-
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-            if(claim != null)
+            if(User.IsInRole(SD.Role_Admin))
             {
-                HttpContext.Session.SetInt32(SD.SessionCart, 
-                    _unitOfWork.shoppingCartRepository.GetAll(u => u.ApplicationUserId == claim.Value).Count());
-            }
+                return Redirect("/Admin/Product");
+            } 
+            else
+            {
+                IEnumerable<Product> productList = _unitOfWork.productRepository.GetAll(includeProperties: "Category");
 
-            return View(productList);
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                if (claim != null)
+                {
+                    HttpContext.Session.SetInt32(SD.SessionCart,
+                        _unitOfWork.shoppingCartRepository.GetAll(u => u.ApplicationUserId == claim.Value).Count());
+                }
+
+                return View(productList);
+            }
         }
 
         public IActionResult Details(int? productId)

@@ -58,6 +58,15 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [BindProperty]
+            public string CurrentPassword { get; set; }
+
+            [BindProperty]
+            public string NewPassword { get; set; }
+
+            [BindProperty]
+            public string ConfirmPassword { get; set; }
         }
 
         private async Task LoadAsync(IdentityUser user)
@@ -108,6 +117,35 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
                 }
+            }
+
+            // Handle password change logic
+            if (!string.IsNullOrEmpty(Input.CurrentPassword) && !string.IsNullOrEmpty(Input.NewPassword) && !string.IsNullOrEmpty(Input.ConfirmPassword))
+            {
+                // Verify the old password (current password)
+                var passwordCheckResult = await _signInManager.PasswordSignInAsync(user.UserName, Input.CurrentPassword, false, false);
+                if (!passwordCheckResult.Succeeded)
+                {
+                    StatusMessage = "Error: The current password is incorrect.";
+                    return RedirectToPage();
+                }
+
+                // Ensure that new password and confirm password match
+                if (Input.NewPassword != Input.ConfirmPassword)
+                {
+                    StatusMessage = "Error: The new password and confirmation password do not match.";
+                    return RedirectToPage();
+                }
+
+                // Change the password using the UserManager
+                var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.CurrentPassword, Input.NewPassword);
+                if (!changePasswordResult.Succeeded)
+                {
+                    StatusMessage = "Error: Unable to change password.";
+                    return RedirectToPage();
+                }
+
+                StatusMessage = "Your password has been changed successfully.";
             }
 
             await _signInManager.RefreshSignInAsync(user);

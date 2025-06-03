@@ -16,6 +16,9 @@ namespace WebApplication1.Areas.Admin.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         [BindProperty]
         public Product product { get; set; }
+
+        //[BindProperty(SupportsGet = true)]
+        //public string searchTerm { get; set; }
         public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
@@ -35,15 +38,40 @@ namespace WebApplication1.Areas.Admin.Controllers
             return @"/images/product/" + fileName;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(String? searchTerm)
         {
-            List<Product> listProduct = _unitOfWork.productRepository.GetAll().ToList();
+            List<Product> listProduct;
+
+            if (String.IsNullOrEmpty(searchTerm))
+            {
+                listProduct = _unitOfWork.productRepository.GetAll().ToList();
+            }
+            else
+            {
+                listProduct = _unitOfWork.productRepository.GetAll(
+                    product => product.Title.ToLower().Contains(searchTerm.ToLower()) || 
+                    product.Author.ToLower().Contains(searchTerm.ToLower())).ToList();
+            }
+
             IEnumerable<SelectListItem> CategoryList = _unitOfWork.categoryRepository.GetAll().Select(u => new SelectListItem
             {
                 Text = u.Name,
                 Value = u.ID.ToString()
             });
-            return View(listProduct);
+
+            ProductSearch productSearch = new()
+            {
+                listProduct = listProduct,
+                searchTerm = ""
+            };
+
+            return View(productSearch);
+        }
+
+        [HttpPost]
+        public IActionResult Index(ProductSearch productSearch)
+        {
+            return RedirectToAction(nameof(Index), new { searchTerm = productSearch.searchTerm });
         }
 
         // HTTP - GET

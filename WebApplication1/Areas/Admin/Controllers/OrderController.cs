@@ -9,6 +9,7 @@ using WebApplication1.ViewModels;
 namespace WebApplication1.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
